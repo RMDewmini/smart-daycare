@@ -5,6 +5,7 @@ import 'pages/class_page.dart';
 import 'pages/attendance_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/teacher_pickup_page.dart';
+import 'pages/child_safety_pickup_page.dart';
 
 void main() {
   runApp(const TeacherApp());
@@ -127,6 +128,17 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const TeacherPickupPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.security),
+              title: const Text('Child Safety & Security'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChildSafetyPickupPage()),
                 );
               },
             ),
@@ -316,7 +328,12 @@ class _DashboardContentState extends State<DashboardContent> {
                   );
                 }),
                 const SizedBox(height: 10),
-                _buildSidebarQuickActionItem('Health', Icons.favorite_border, () {}),
+                _buildSidebarQuickActionItem('Child Safety', Icons.security, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChildSafetyPickupPage()),
+                  );
+                }),
                 const SizedBox(height: 10),
                 _buildSidebarQuickActionItem('Attendance', Icons.calendar_today_outlined, () {}),
               ],
