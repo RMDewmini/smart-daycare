@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-// වෙනත් ෆයිල්ස් වලින් පේජ්ස් ඉම්පෝර්ට් කරගැනීම
 import 'pages/class_page.dart';
 import 'pages/attendance_page.dart';
 import 'pages/profile_page.dart';
+import 'pages/teacher_pickup_page.dart';
 
 void main() {
   runApp(const TeacherApp());
@@ -17,7 +17,7 @@ class TeacherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Teacher Dashboard',
+      title: 'Isuru Daycare',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: const Color(0xFFF4F6F9),
@@ -47,7 +47,6 @@ class TeacherDashboardScreen extends StatefulWidget {
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   int _selectedIndex = 0;
 
-  // පිටු 4 ලැයිස්තුව මෙහි අර්ථ දක්වා ඇත
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardContent(),
     ClassPage(),
@@ -65,7 +64,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Teacher Portal'),
+        title: const Text('Isuru Daycare'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none),
@@ -121,6 +120,17 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.verified_user),
+              title: const Text('Pickup Verification'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TeacherPickupPage()),
+                );
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.person_outline),
               title: const Text('Profile'),
               onTap: () {
@@ -156,7 +166,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: SizedBox(
-                height: 750, // කාඩ් එක ඇතුළේ පිටු මාරු වන විට ස්ථාවර උසක් පවත්වා ගැනීමට
+                height: 750,
                 child: _widgetOptions.elementAt(_selectedIndex),
               ),
             ),
@@ -180,8 +190,6 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     );
   }
 }
-
-// Student Model සහ DashboardContent කෝඩ් එක පහත දැක්වේ
 
 class Student {
   final String name;
@@ -280,311 +288,347 @@ class _DashboardContentState extends State<DashboardContent> {
 
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: ListView(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    greetingMessage,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const Text(
-                    'Ms. Amanda 👋',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.indigo),
-                  ),
-                ],
-              ),
-              const CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // Date/Clock & Teacher Tip row
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.indigo.withOpacity(0.15)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.calendar_today, size: 18, color: Colors.indigo),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              currentDateFormatted,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.indigo),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.access_time, size: 18, color: Colors.teal),
-                          const SizedBox(width: 8),
-                          Text(
-                            _timeString,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.teal),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.amber.withOpacity(0.3)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.lightbulb_outline, size: 18, color: Colors.orange.shade800),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Teacher Tip of the Day',
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.brown),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Please verify and submit student attendance before 09:30 AM daily.',
-                        style: TextStyle(fontSize: 12, color: Colors.brown),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            width: 200,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.indigo.withOpacity(0.08),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.class_, color: Colors.indigo, size: 20),
-                    SizedBox(width: 8),
-                    Text('Class', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.indigo)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Preschool A', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.indigo)),
-                    Icon(Icons.arrow_drop_down, color: Colors.indigo),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          const Text(
-            'Class Summary',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-
-          Row(
-            children: [
-              Expanded(child: _buildSummaryBadge('Total: ${_students.length}', Colors.indigo)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildSummaryBadge('Present: $presentCount', Colors.teal)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildSummaryBadge('Absent: $absentCount', Colors.redAccent)),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          const Text(
-            'Quick Actions',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          
-          Row(
-            children: [
-              Expanded(child: _buildQuickActionItem('Activities', Icons.insights)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildQuickActionItem('Notify', Icons.notifications_active_outlined)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildQuickActionItem('Health', Icons.favorite_border)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildQuickActionItem('Attendance', Icons.calendar_today_outlined)),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Recent Announcements
-          const Text(
-            'Recent Announcements',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue.withOpacity(0.2)),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.campaign, color: Colors.blue, size: 24),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Annual Sports Meet Practice',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        'Ground practice will begin tomorrow at 9:00 AM for Preschool A.',
-                        style: TextStyle(fontSize: 12, color: Colors.black87),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Today Schedule
-          const Text(
-            'Today Schedule',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _buildScheduleCard('09:00 AM', 'Morning Assembly', Icons.people),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildScheduleCard('10:30 AM', 'Drawing & Craft', Icons.palette),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildScheduleCard('12:00 PM', 'Lunch & Play', Icons.fastfood),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Teacher Quick Notes
-          const Text(
-            'Teacher Quick Notes',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.purple.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.purple.withOpacity(0.2)),
-            ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Quick Actions',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo),
+                ),
+                const SizedBox(height: 12),
+                _buildSidebarQuickActionItem('Activities', Icons.insights, () {}),
+                const SizedBox(height: 10),
+                _buildSidebarQuickActionItem('Pickup Verify', Icons.verified_user, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TeacherPickupPage()),
+                  );
+                }),
+                const SizedBox(height: 10),
+                _buildSidebarQuickActionItem('Health', Icons.favorite_border, () {}),
+                const SizedBox(height: 10),
+                _buildSidebarQuickActionItem('Attendance', Icons.calendar_today_outlined, () {}),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.edit_note, color: Colors.purple, size: 20),
-                    SizedBox(width: 8),
-                    Text(
-                      'To-Do Checklist for Today',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.purple),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          greetingMessage,
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                        const Text(
+                          'Ms. Amanda',
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.indigo),
+                        ),
+                      ],
+                    ),
+                    const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150'),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                Text('• Check homework books for Little Lim & Emma.', style: TextStyle(fontSize: 12, color: Colors.black87)),
-                SizedBox(height: 4),
-                Text('• Update health check records in the evening.', style: TextStyle(fontSize: 12, color: Colors.black87)),
+                const SizedBox(height: 20),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.indigo.withOpacity(0.15)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today, size: 18, color: Colors.indigo),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    currentDateFormatted,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.indigo),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(Icons.access_time, size: 18, color: Colors.teal),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _timeString,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.teal),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.amber.withOpacity(0.3)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.lightbulb_outline, size: 18, color: Colors.orange.shade800),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Teacher Tip of the Day',
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.brown),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Please verify and submit student attendance before 09:30 AM daily.',
+                              style: TextStyle(fontSize: 12, color: Colors.brown),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.indigo.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.class_, color: Colors.indigo, size: 20),
+                          SizedBox(width: 8),
+                          Text('Class', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.indigo)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Preschool A', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.indigo)),
+                          Icon(Icons.arrow_drop_down, color: Colors.indigo),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Class Summary',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(child: _buildSummaryBadge('Total: ${_students.length}', Colors.indigo)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildSummaryBadge('Present: $presentCount', Colors.teal)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildSummaryBadge('Absent: $absentCount', Colors.redAccent)),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Recent Announcements',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.campaign, color: Colors.blue, size: 24),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Annual Sports Meet Practice',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              'Ground practice will begin tomorrow at 9:00 AM for Preschool A.',
+                              style: TextStyle(fontSize: 12, color: Colors.black87),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Today Schedule',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(child: _buildScheduleCard('09:00 AM', 'Morning Assembly', Icons.people)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildScheduleCard('10:30 AM', 'Drawing & Craft', Icons.palette)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildScheduleCard('12:00 PM', 'Lunch & Play', Icons.fastfood)),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Teacher Quick Notes',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.purple.withOpacity(0.2)),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.edit_note, color: Colors.purple, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'To-Do Checklist for Today',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.purple),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Text('• Check homework books for Little Lim & Emma.', style: TextStyle(fontSize: 12, color: Colors.black87)),
+                      SizedBox(height: 4),
+                      Text('• Update health check records in the evening.', style: TextStyle(fontSize: 12, color: Colors.black87)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Student Attendance List',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _students.length,
+                  itemBuilder: (context, index) {
+                    final student = _students[index];
+                    return _buildStudentAttendanceCard(student, index);
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Attendance saved successfully!')),
+                      );
+                    },
+                    child: const Text(
+                      'Save Attendance',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-
-          const Text(
-            'Student Attendance List',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _students.length,
-            itemBuilder: (context, index) {
-              final student = _students[index];
-              return _buildStudentAttendanceCard(student, index);
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Attendance saved successfully!')),
-                );
-              },
-              child: const Text(
-                'Save Attendance',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSidebarQuickActionItem(String title, IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.indigo.withOpacity(0.12)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.indigo),
+            const SizedBox(width: 10),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.indigo),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -600,29 +644,6 @@ class _DashboardContentState extends State<DashboardContent> {
         text,
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
-      ),
-    );
-  }
-
-  Widget _buildQuickActionItem(String title, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.indigo.withOpacity(0.12)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 22, color: Colors.indigo),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.indigo),
-          ),
-        ],
       ),
     );
   }
